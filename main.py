@@ -9,6 +9,7 @@ from plotly.subplots import make_subplots
 import pydeck as pdk
 
 st.title("Projeto Final - Análise Gráfica")
+st.header("Profissionais de TI no Brasil em 2021")
 
 colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
@@ -28,6 +29,7 @@ with col1:
 
 # PIE - matplotlib
 def grafico_genero_porcentagem():
+    st.subheader('Profissionais de TI: Percentual por Gênero')
     df_qtd = df_salary_IT.groupby(df_salary_IT['Genero']).size()
     df_qtd_genero = df_qtd.to_frame()
     df_qtd_genero.rename(columns={0: 'qtd'}, inplace=True)
