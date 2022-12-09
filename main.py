@@ -13,7 +13,7 @@ st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 
 st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
 
 
-colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade']
+colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade','Nivel']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
 
 df_columns = df_salary_IT.columns
@@ -293,6 +293,33 @@ def grafico_idade():
     eixo = df_salary_IT.boxplot('Idade')
     col2.pyplot(grafico)
 
+def grafico_questionario_uf():
+    #df101 = df_salary_IT.groupby(['Nivel'])['Genero', 'uf onde mora', 'Faixa salarial'].value_counts()
+    qtd = df_salary_IT['Regiao onde mora'].value_counts().values
+    idx = df_salary_IT['Regiao onde mora'].value_counts().index
+
+    #plt.figure(figsize=(24, 8))
+    grafico01,eixo01 = plt.subplots() #(1, 2, 1)
+    eixo01 = plt.bar(idx, qtd, ec="k", alpha=.6, color="royalblue")
+    plt.xlabel('Estado')
+    plt.title("Quantidade de profissionais que preencheram o questionario por UF")
+    grafico02,eixo02 = plt.subplots() #(1, 2, 2)
+    eixo02 = plt.pie(qtd,
+            labels=list(idx),
+            colors=["#20257c", "#424ad1", "#6a8ee8", "#66bbe2", "#66dee2"],
+            labeldistance=1.1,
+            #explode=[0.08, 0.05],
+            #explode=[0, 0, .1, .2, .4],
+            wedgeprops={"ec": "k"},
+            textprops={"fontsize": 15},
+            )
+    plt.axis("equal")
+    plt.title("Quantidade de profissionais que preencheram o questionario por UF")
+    plt.legend()
+    col2.pyplot(grafico01)
+    col2.pyplot(grafico02)
+    #col2.plotly(grafico)
+
 with col2:
 
     if(eixo_X == 'Genero'):
@@ -302,6 +329,8 @@ with col2:
             grafico_genero_salario()
         elif (eixo_Y == 'Genero'):
             grafico_genero_porcentagem()
+        elif (eixo_Y == 'Nivel'):
+            grafico_questionario_uf()
     elif (eixo_Y == 'Genero'):
         if (eixo_X == 'uf onde mora'):
             grafico_uf_genero()
