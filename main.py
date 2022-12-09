@@ -23,6 +23,8 @@ with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
     eixo_Y = st.selectbox("eixo Y:", df_columns)
 
+
+
 # PIE - matplotlib
 def grafico_genero_porcentagem():
     st.markdown('<h6 style="text-align: center;">Percentual por Gênero</h6>',
