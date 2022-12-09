@@ -22,12 +22,6 @@ col1,col2 = st.columns(2)
 with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
     eixo_Y = st.selectbox("eixo Y:", df_columns)
-    # if (eixo_X != eixo_Y):
-    #     pass
-        #col1.dataframe(df_salary_IT[[eixo_X,eixo_Y]].head())
-    # else:
-    #     pass
-        #col1.dataframe(df_salary_IT.head())
 
 # PIE - matplotlib
 def grafico_genero_porcentagem():
@@ -283,12 +277,16 @@ def grafico_escolaridade_genero():
     col2.plotly_chart(fig)
 
 def grafico_faixaIdade():
+    st.markdown('<h4 style="text-align: center;">Faixa Etária</h4>',
+                unsafe_allow_html=True)
     df_salary_gen_age = df_salary_IT.groupby('Faixa idade')['Genero'].count()
     grafico, eixo = plt.subplots()
     eixo = df_salary_gen_age.plot(kind='bar')
     col2.pyplot(grafico)
 
 def grafico_idade():
+    st.markdown('<h4 style="text-align: center;">Idade</h4>',
+                unsafe_allow_html=True)
     grafico, eixo = plt.subplots()
     eixo = df_salary_IT.boxplot('Idade')
     col2.pyplot(grafico)
@@ -300,7 +298,7 @@ with col2:
             grafico_genero_mudouEstado()
         elif (eixo_Y == 'Faixa salarial'):
             grafico_genero_salario()
-        else:
+        elif (eixo_Y == 'Genero'):
             grafico_genero_porcentagem()
     elif (eixo_Y == 'Genero'):
         if (eixo_X == 'uf onde mora'):
@@ -311,9 +309,9 @@ with col2:
             grafico_salario_genero()
         elif (eixo_X == 'Nivel de Ensino'):
             grafico_escolaridade_genero()
-    elif(eixo_X == 'uf onde mora'):
+    elif(eixo_X == 'uf onde mora' and eixo_Y == 'uf onde mora'):
         grafico_mapa_uf()
-    elif (eixo_X == 'Faixa idade'):
+    elif (eixo_X == 'Faixa idade' and eixo_Y == 'Faixa idade'):
         grafico_faixaIdade()
-    elif (eixo_X == 'Idade'):
+    elif (eixo_X == 'Idade' and eixo_Y == 'Idade'):
         grafico_idade()
