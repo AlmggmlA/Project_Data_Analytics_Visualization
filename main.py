@@ -10,7 +10,8 @@ import pydeck as pdk
 
 st.title("Projeto Final - Análise Gráfica")
 
-df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv',index_col = 0)
+colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora']
+df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
 
 df_columns = df_salary_IT.columns
 col1,col2 = st.columns(2)
@@ -46,7 +47,7 @@ def grafico_genero_mudouEstado():
                                           columns = df_filtro['Mudou de Estado?'],
                                           values = df_filtro['size'],
                                           aggfunc = "sum")
-
+    df_gen_mudou_estado_ctb.rename(columns = {0:"Não", 1:"Sim"},inplace=True)
     # gera gráfico, separado por colunas
     grafico = px.bar(data_frame = df_gen_mudou_estado_ctb,
                      x = df_gen_mudou_estado_ctb.index,
@@ -54,7 +55,7 @@ def grafico_genero_mudouEstado():
                      base = df_gen_mudou_estado_ctb.index,
                      barmode="group")
 
-    #grafico.update_traces(name = "não") # coloca um nome dentro do quadro de legenda
+    col1.dataframe(df_gen_mudou_estado_ctb)
     col2.plotly_chart(grafico)
 
 # BAR - plotly
@@ -72,6 +73,7 @@ def grafico_genero_salario():
                      y=df_genero_salario_ctb.columns,
                      base=df_genero_salario_ctb.index,
                      barmode="group")
+    col1.dataframe(df_genero_salario_ctb)
     col2.plotly_chart(grafico)
 
 def grafico_uf_genero():
@@ -169,6 +171,41 @@ def grafico_mapa_uf():
     col1.dataframe(df_estado_filtro)
     show_column_map(df_estado_filtro)
 
+def grafico_salario_genero():
+    # criando gráfico de pirâmide para salários
+    abs_genero = pd.crosstab(df_salary_IT["Faixa salarial"], df_salary_IT["Genero"])
+
+    women_pop = list(abs_genero.Feminino)
+    men_pop = list(abs_genero.Masculino)
+    men_pop = [element * -1 for element in men_pop]
+
+    faixa = list(abs_genero.index.values)
+
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=faixa,
+        x=men_pop,
+        name='Masculino',
+        marker_color='lightgray',
+        orientation='h'
+    ))
+    fig.add_trace(go.Bar(
+        y=faixa,
+        x=women_pop,
+        name='Feminino',
+        marker_color='#710c04',
+        orientation='h'
+    ))
+
+    fig['layout']['title'] = "Pirâmide salarial segundo o gênero"
+    fig['layout']['yaxis']['title'] = 'Faixa salarial'
+
+    fig.update_layout(barmode='relative', xaxis_tickangle=-90)
+    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+    fig.update_layout(width=800, height=500)
+    #st.subheader('Pirâmide salarial segundo o gênero')
+    col2.plotly_chart(fig)
+
 with col2:
 
     if(eixo_X == 'Genero'):
@@ -183,5 +220,7 @@ with col2:
             grafico_uf_genero()
         elif (eixo_X == 'Regiao onde mora'):
             grafico_regiao_genero()
+        elif (eixo_X == 'Faixa salarial'):
+            grafico_salario_genero()
     elif(eixo_X == 'uf onde mora'):
         grafico_mapa_uf()
