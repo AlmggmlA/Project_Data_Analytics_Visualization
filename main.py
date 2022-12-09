@@ -97,7 +97,7 @@ def show_column_map(data):
                 'ColumnLayer',
                 data=data,
                 get_position='[lon, lat]',
-                #get_elevation='[newCases+newDeaths]',
+                get_elevation='size',
                 radius=20000,
                 auto_highlight=True,
                 elevation_scale=100,
@@ -110,7 +110,7 @@ def show_column_map(data):
                 'ColumnLayer',
                 data=data,
                 get_position='[lon, lat]',
-                #get_elevation='[newCases]',
+                get_elevation='size',
                 radius=20000,
                 auto_highlight=True,
                 elevation_scale=100,
@@ -159,10 +159,10 @@ STATES_COORD = {
 def grafico_mapa_uf():
     df_estado = pd.DataFrame(df_salary_IT['uf onde mora'])
     df_estado.dropna(axis=0, how="any", inplace=True)
+    df_estado_filtro = df_estado.groupby(['uf onde mora'], as_index=False).size()
     #df_estado.drop(df_estado[df_estado['uf onde mora'] == 'Exterior'].index, inplace=True)
 
-    show_column_map(df_estado)
-
+    show_column_map(df_estado_filtro)
 
 with col2:
 
@@ -180,7 +180,3 @@ with col2:
             grafico_regiao_genero()
     elif(eixo_X == 'uf onde mora'):
         grafico_mapa_uf()
-
-
-
-
