@@ -104,7 +104,7 @@ def show_column_map(data):
                 elevation_range=[0, 5000],
                 pickable=True,
                 extruded=True,
-                #get_color="[10 10 10 255]"
+                get_color="[10 10 10 255]"
             ),
             pdk.Layer(
                 'ColumnLayer',
@@ -117,7 +117,7 @@ def show_column_map(data):
                 elevation_range=[0, 5000],
                 pickable=True,
                 extruded=True,
-                #get_color="[128 10 10 255]"
+                get_color="[128 10 10 255]"
             )
         ]
     ))
@@ -159,8 +159,11 @@ STATES_COORD = {
 def grafico_mapa_uf():
     df_estado = pd.DataFrame(df_salary_IT['uf onde mora'])
     df_estado.dropna(axis=0, how="any", inplace=True)
+    #df_estado.drop(df_estado[df_estado['uf onde mora'] == 'Exterior'].index, inplace=True)
 
+    st.dataframe(df_estado)
     show_column_map(df_estado)
+
 
 with col2:
 
