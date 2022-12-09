@@ -94,7 +94,7 @@ def show_column_map(data):
         ),
         layers=[
             pdk.Layer(
-                'ColumnLayer',
+                'HeatmapLayer',
                 data=data,
                 get_position='[lon, lat]',
                 get_elevation='size',
@@ -117,7 +117,7 @@ def show_column_map(data):
                 elevation_range=[0, 5000],
                 pickable=True,
                 extruded=True,
-                get_color="[128 10 10 255]"
+                get_color="[180, 0, 200, 140]"
             )
         ]
     ))
