@@ -13,7 +13,7 @@ st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 
 st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
 
 
-colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade','Nivel']
+colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
 
 df_columns = df_salary_IT.columns
@@ -329,8 +329,6 @@ with col2:
             grafico_genero_salario()
         elif (eixo_Y == 'Genero'):
             grafico_genero_porcentagem()
-        elif (eixo_Y == 'Nivel'):
-            grafico_questionario_uf()
     elif (eixo_Y == 'Genero'):
         if (eixo_X == 'uf onde mora'):
             grafico_uf_genero()
@@ -346,3 +344,5 @@ with col2:
         grafico_faixaIdade()
     elif (eixo_X == 'Idade' and eixo_Y == 'Idade'):
         grafico_idade()
+    elif (eixo_X == 'Regiao onde mora' and eixo_Y == 'Regiao onde mora'):
+        grafico_questionario_uf()
