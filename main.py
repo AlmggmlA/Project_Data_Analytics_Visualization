@@ -298,7 +298,7 @@ def grafico_questionario_uf():
     qtd = df_salary_IT['Regiao onde mora'].value_counts().values
     idx = df_salary_IT['Regiao onde mora'].value_counts().index
 
-    #plt.figure(figsize=(24, 8))
+    plt.figure(figsize=(24, 8))
     grafico01,eixo01 = plt.subplots() #(1, 2, 1)
     eixo01 = plt.bar(idx, qtd, ec="k", alpha=.6, color="royalblue")
     plt.xlabel('Estado')
