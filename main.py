@@ -12,6 +12,7 @@ st.markdown('<h1 style="text-align: center;">Projeto Final - Análise Gráfica</
 st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 2021 -</h3>', unsafe_allow_html=True)
 st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
 
+st.markdown('<h8 style="text-align: center;">**Autores:**  <font color=blue>Aprígio Gusmão e Fausto Lucena</font> </h8>', unsafe_allow_html=True)
 
 colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
