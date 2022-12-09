@@ -19,9 +19,11 @@ with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
     eixo_Y = st.selectbox("eixo Y:", df_columns)
     if (eixo_X != eixo_Y):
-        col1.dataframe(df_salary_IT[[eixo_X,eixo_Y]].head())
+        pass
+        #col1.dataframe(df_salary_IT[[eixo_X,eixo_Y]].head())
     else:
-        col1.dataframe(df_salary_IT.head())
+        pass
+        #col1.dataframe(df_salary_IT.head())
 
 # PIE - matplotlib
 def grafico_genero_porcentagem():
@@ -57,6 +59,7 @@ def grafico_genero_mudouEstado():
 
 # BAR - plotly
 def grafico_genero_salario():
+    st.subheader('Profissionais de TI: divido por Faixa Salarial e Gênero')
     df_filtro = df_salary_IT.groupby(['Genero', 'Faixa salarial'], as_index=False).size()
 
     df_genero_salario_ctb = pd.crosstab(index = df_filtro['Genero'],
@@ -72,17 +75,18 @@ def grafico_genero_salario():
     col2.plotly_chart(grafico)
 
 def grafico_uf_genero():
+    st.subheader('Profissionais de TI: divido por Estado e Gênero')
     grafico = sns.displot(x='uf onde mora', col="Genero", data=df_salary_IT)
     col2.pyplot(grafico)
 
 def grafico_regiao_genero():
+    st.subheader('Profissionais de TI: divido por Região e Gênero')
     grafico = sns.displot(x='Regiao onde mora', col="Genero", data=df_salary_IT)
     col2.pyplot(grafico)
 
-
 def show_column_map(data):
-    data['lat'] = data['uf onde mora'].apply(_get_coord, args=('lat',))
-    data['lon'] = data['uf onde mora'].apply(_get_coord, args=('lon',))
+    data['lat'] = data['UF'].apply(_get_coord, args=('lat',))
+    data['lon'] = data['UF'].apply(_get_coord, args=('lon',))
 
     st.pydeck_chart(pdk.Deck(
         map_style='mapbox://styles/mapbox/light-v9',
@@ -97,7 +101,7 @@ def show_column_map(data):
                 'HeatmapLayer',
                 data=data,
                 get_position='[lon, lat]',
-                get_elevation='size',
+                get_elevation='QTD',
                 radius=20000,
                 auto_highlight=True,
                 elevation_scale=100,
@@ -110,7 +114,7 @@ def show_column_map(data):
                 'ColumnLayer',
                 data=data,
                 get_position='[lon, lat]',
-                get_elevation='size',
+                get_elevation='QTD',
                 radius=20000,
                 auto_highlight=True,
                 elevation_scale=100,
@@ -157,11 +161,12 @@ STATES_COORD = {
     'TO': {'lat': -10.21, 'lon': -47.91}
 }
 def grafico_mapa_uf():
+    st.subheader('Quantidade de Profissionais de TI por Estado')
     df_estado = pd.DataFrame(df_salary_IT['uf onde mora'])
     df_estado.dropna(axis=0, how="any", inplace=True)
     df_estado_filtro = df_estado.groupby(['uf onde mora'], as_index=False).size()
-    #df_estado.drop(df_estado[df_estado['uf onde mora'] == 'Exterior'].index, inplace=True)
-
+    df_estado_filtro.rename(columns={"size":"QTD","uf onde mora":"UF"},inplace=True)
+    col1.dataframe(df_estado_filtro)
     show_column_map(df_estado_filtro)
 
 with col2:
