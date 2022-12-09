@@ -13,7 +13,7 @@ st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 
 st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
 
 
-colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora']
+colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
 
 df_columns = df_salary_IT.columns
@@ -217,6 +217,72 @@ def grafico_salario_genero():
     #st.subheader('Pirâmide salarial segundo o gênero')
     col2.plotly_chart(fig)
 
+def grafico_escolaridade_genero():
+    # Criando subplots: usando 'domain' para Pie subplot
+    st.markdown('<h4 style="text-align: center;">Nível de Escolaridade por Gênero</h4>',
+                unsafe_allow_html=True)
+    fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
+
+    # MASCULINO
+    labels_male = df_salary_IT["Nivel de Ensino"].where(df_salary_IT["Genero"] == 'Masculino').value_counts().index.values
+    values_male = df_salary_IT["Nivel de Ensino"].where(df_salary_IT["Genero"] == 'Masculino').value_counts().values
+
+    # FEMININO
+    labels_female = df_salary_IT["Nivel de Ensino"].where(df_salary_IT["Genero"] == 'Feminino').value_counts().index.values
+    values_female = df_salary_IT["Nivel de Ensino"].where(df_salary_IT["Genero"] == 'Feminino').value_counts().values
+
+    # gráfico
+    # Add traces
+    fig.add_trace(
+        go.Pie(
+            values=values_male,
+            labels=labels_male,
+            hole=0.6,
+            title='Nível de ensino dos Homens'
+        ),
+        1, 1
+    )
+
+    fig.add_trace(
+        go.Pie(
+            values=values_female,
+            labels=labels_female,
+            hole=0.6,
+            title='Nível de ensino das Mulheres'
+        ),
+        1, 2
+    )
+
+    fig.add_annotation(
+        dict(
+            font=dict(color='#400080', size=10),
+            x=0.56,
+            y=-0.05,
+            showarrow=False,
+            textangle=0,
+            xanchor='right',
+            xref="paper",
+            yref="paper"
+        )
+    )
+
+    fig.add_annotation(
+        dict(
+            font=dict(color='#400080', size=10),
+            x=1.12,
+            y=-0.05,
+            showarrow=False,
+            textangle=0,
+            xanchor='right',
+            xref="paper",
+            yref="paper"
+        )
+    )
+
+    fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
+    col2.plotly_chart(fig)
+
+
 with col2:
 
     if(eixo_X == 'Genero'):
@@ -233,5 +299,7 @@ with col2:
             grafico_regiao_genero()
         elif (eixo_X == 'Faixa salarial'):
             grafico_salario_genero()
+        elif (eixo_X == 'Nivel de Ensino'):
+            grafico_escolaridade_genero()
     elif(eixo_X == 'uf onde mora'):
         grafico_mapa_uf()
