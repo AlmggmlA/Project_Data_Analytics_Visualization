@@ -8,8 +8,10 @@ import streamlit as st
 from plotly.subplots import make_subplots
 import pydeck as pdk
 
-st.title("Projeto Final - Análise Gráfica")
-st.header("Profissionais de TI no Brasil em 2021")
+st.markdown('<h1 style="text-align: center;">Projeto Final - Análise Gráfica</h1>', unsafe_allow_html=True)
+st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 2021 -</h3>', unsafe_allow_html=True)
+st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
+
 
 colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
@@ -20,16 +22,17 @@ col1,col2 = st.columns(2)
 with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
     eixo_Y = st.selectbox("eixo Y:", df_columns)
-    if (eixo_X != eixo_Y):
-        pass
+    # if (eixo_X != eixo_Y):
+    #     pass
         #col1.dataframe(df_salary_IT[[eixo_X,eixo_Y]].head())
-    else:
-        pass
+    # else:
+    #     pass
         #col1.dataframe(df_salary_IT.head())
 
 # PIE - matplotlib
 def grafico_genero_porcentagem():
-    st.subheader('Profissionais de TI: Percentual por Gênero')
+    st.markdown('<h6 style="text-align: center;">Percentual por Gênero</h6>',
+                unsafe_allow_html=True)
     df_qtd = df_salary_IT.groupby(df_salary_IT['Genero']).size()
     df_qtd_genero = df_qtd.to_frame()
     df_qtd_genero.rename(columns={0: 'qtd'}, inplace=True)
@@ -43,6 +46,8 @@ def grafico_genero_porcentagem():
 
 # BAR - plotly
 def grafico_genero_mudouEstado():
+    st.markdown('<h4 style="text-align: center;">Mudaram de Estado</h4>',
+                unsafe_allow_html=True)
     df_filtro = df_salary_IT.groupby(['Genero', "Mudou de Estado?"], as_index=False).size()
 
     df_gen_mudou_estado_ctb = pd.crosstab(index = df_filtro['Genero'],
@@ -62,7 +67,8 @@ def grafico_genero_mudouEstado():
 
 # BAR - plotly
 def grafico_genero_salario():
-    st.subheader('Profissionais de TI: divido por Faixa Salarial e Gênero')
+    st.markdown('<h4 style="text-align: center;">Divisão por Faixa Salarial e Gênero</h4>',
+                unsafe_allow_html=True)
     df_filtro = df_salary_IT.groupby(['Genero', 'Faixa salarial'], as_index=False).size()
 
     df_genero_salario_ctb = pd.crosstab(index = df_filtro['Genero'],
@@ -79,12 +85,14 @@ def grafico_genero_salario():
     col2.plotly_chart(grafico)
 
 def grafico_uf_genero():
-    st.subheader('Profissionais de TI: divido por Estado e Gênero')
+    st.markdown('<h5 style="text-align: center;">Divisão por Estado e Gênero</h5>',
+                unsafe_allow_html=True)
     grafico = sns.displot(x='uf onde mora', col="Genero", data=df_salary_IT)
     col2.pyplot(grafico)
 
 def grafico_regiao_genero():
-    st.subheader('Profissionais de TI: divido por Região e Gênero')
+    st.markdown('<h5 style="text-align: center;">Divisão por Região e Gênero</h5>',
+                unsafe_allow_html=True)
     grafico = sns.displot(x='Regiao onde mora', col="Genero", data=df_salary_IT)
     col2.pyplot(grafico)
 
@@ -165,7 +173,8 @@ STATES_COORD = {
     'TO': {'lat': -10.21, 'lon': -47.91}
 }
 def grafico_mapa_uf():
-    st.subheader('Quantidade de Profissionais de TI por Estado')
+    st.markdown('<h6 style="text-align: center;">Quantidade de Profissionais de TI por Estado</h6>',
+                unsafe_allow_html=True)
     df_estado = pd.DataFrame(df_salary_IT['uf onde mora'])
     df_estado.dropna(axis=0, how="any", inplace=True)
     df_estado_filtro = df_estado.groupby(['uf onde mora'], as_index=False).size()
