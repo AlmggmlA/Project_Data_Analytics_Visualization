@@ -6,6 +6,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
+import pydeck as pdk
 
 st.title("Projeto Final - Análise Gráfica")
 
@@ -63,12 +64,103 @@ def grafico_genero_salario():
                                         values = df_filtro['size'],
                                         aggfunc = 'sum')
 
-    grafico_03 = px.bar(data_frame=df_genero_salario_ctb,
+    grafico = px.bar(data_frame=df_genero_salario_ctb,
                      x=df_genero_salario_ctb.index,
                      y=df_genero_salario_ctb.columns,
                      base=df_genero_salario_ctb.index,
                      barmode="group")
-    col2.plotly_chart(grafico_03)
+    col2.plotly_chart(grafico)
+
+def grafico_uf_genero():
+    grafico = sns.displot(x='uf onde mora', col="Genero", data=df_salary_IT)
+    col2.pyplot(grafico)
+
+def grafico_regiao_genero():
+    grafico = sns.displot(x='Regiao onde mora', col="Genero", data=df_salary_IT)
+    col2.pyplot(grafico)
+
+
+def show_column_map(data):
+    data['lat'] = data['uf onde mora'].apply(_get_coord, args=('lat',))
+    data['lon'] = data['uf onde mora'].apply(_get_coord, args=('lon',))
+
+    st.pydeck_chart(pdk.Deck(
+        map_style='mapbox://styles/mapbox/light-v9',
+        initial_view_state=pdk.ViewState(
+            latitude=-23.901,
+            longitude=-46.525,
+            zoom=5,
+            pitch=50
+        ),
+        layers=[
+            pdk.Layer(
+                'ColumnLayer',
+                data=data,
+                get_position='[lon, lat]',
+                #get_elevation='[newCases+newDeaths]',
+                radius=20000,
+                auto_highlight=True,
+                elevation_scale=100,
+                elevation_range=[0, 5000],
+                pickable=True,
+                extruded=True,
+                #get_color="[10 10 10 255]"
+            ),
+            pdk.Layer(
+                'ColumnLayer',
+                data=data,
+                get_position='[lon, lat]',
+                #get_elevation='[newCases]',
+                radius=20000,
+                auto_highlight=True,
+                elevation_scale=100,
+                elevation_range=[0, 5000],
+                pickable=True,
+                extruded=True,
+                #get_color="[128 10 10 255]"
+            )
+        ]
+    ))
+
+def _get_coord(state, orientation):
+    try:
+        return STATES_COORD[state][orientation]
+    except:
+        return 0
+
+STATES_COORD = {
+    'AC': {'lat': -9.59, 'lon': -70.09},
+    'AL': {'lat': -9.63, 'lon': -36.11},
+    'AM': {'lat': -4.52, 'lon': -62.76},
+    'AP': {'lat': 0.94, 'lon': -51.33},
+    'BA': {'lat': -12.93, 'lon': -40.97},
+    'CE': {'lat': -5.27, 'lon': -39.18},
+    'DF': {'lat': -15.86, 'lon': -47.88},
+    'ES': {'lat': -19.83, 'lon': -40.29},
+    'GO': {'lat': -15.69, 'lon': -49.81},
+    'MA': {'lat': -4.71, 'lon': -44.57},
+    'MG': {'lat': -19.21, 'lon': -44.18},
+    'MS': {'lat': -20.65, 'lon': -54.75},
+    'MT': {'lat': -13.07, 'lon': -56.61},
+    'PA': {'lat': -5.89, 'lon': -52.42},
+    'PB': {'lat': -7.26, 'lon': -36.04},
+    'PE': {'lat': -8.75, 'lon': -37.66},
+    'PI': {'lat': -6.86, 'lon': -42.94},
+    'PR': {'lat': -24.85, 'lon': -51.11},
+    'RJ': {'lat': -22.51, 'lon': -42.67},
+    'RO': {'lat': -11.56, 'lon': -62.47},
+    'RR': {'lat': -1.12, 'lon': -61.25},
+    'RS': {'lat': -29.64, 'lon': -52.89},
+    'SC': {'lat': -27.33, 'lon': -50.02},
+    'SE': {'lat': -10.71, 'lon': -37.35},
+    'SP': {'lat': -22.49, 'lon': -48.15},
+    'TO': {'lat': -10.21, 'lon': -47.91}
+}
+def grafico_mapa_uf():
+    df_estado = pd.DataFrame(df_salary_IT['uf onde mora'])
+    df_estado.dropna(axis=0, how="any", inplace=True)
+
+    show_column_map(df_estado)
 
 with col2:
 
@@ -79,3 +171,14 @@ with col2:
             grafico_genero_salario()
         else:
             grafico_genero_porcentagem()
+    elif (eixo_Y == 'Genero'):
+        if (eixo_X == 'uf onde mora'):
+            grafico_uf_genero()
+        elif (eixo_X == 'Regiao onde mora'):
+            grafico_regiao_genero()
+    elif(eixo_X == 'uf onde mora'):
+        grafico_mapa_uf()
+
+
+
+
