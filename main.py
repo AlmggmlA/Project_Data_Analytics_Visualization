@@ -208,7 +208,7 @@ def grafico_salario_genero():
     fig.update_layout(barmode='relative', xaxis_tickangle=-90)
     fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
     fig.update_layout(width=800, height=500)
-    #st.subheader('Pirâmide salarial segundo o gênero')
+    fig.update_layout(margin_l=200)
     col2.plotly_chart(fig)
 
 def grafico_escolaridade_genero():
