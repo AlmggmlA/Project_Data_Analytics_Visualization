@@ -63,21 +63,6 @@ def grafico_genero_salario():
                                         values = df_filtro['size'],
                                         aggfunc = 'sum')
 
-    cores = {'Menos de R$ 1.000/mês': 'purple',
-             'de R$ 1.001/mês a R$ 2.000/mês': 'red',
-             'de R$ 2.001/mês a R$ 3000/mês': 'gold',
-             'de R$ 3.001/mês a R$ 4.000/mês': 'magenta',
-             'de R$ 4.001/mês a R$ 6.000/mês': 'brown',
-             'de R$ 6.001/mês a R$ 8.000/mês': 'violet',
-             'de R$ 8.001/mês a R$ 12.000/mês': 'blue',
-             'de R$ 12.001/mês a R$ 16.000/mês': 'green',
-             'de R$ 16.001/mês a R$ 20.000/mês': 'pink',
-             'de R$ 20.001/mês a R$ 25.000/mês': 'yellow',
-             'de R$ 25.001/mês a R$ 30.000/mês': 'orange',
-             'de R$ 30.001/mês a R$ 40.000/mês': 'gray',
-             'Acima de R$ 40.001/mês': 'black'
-             }
-
     grafico_03 = px.bar(data_frame=df_genero_salario_ctb,
                      x=df_genero_salario_ctb.index,
                      y=df_genero_salario_ctb.columns,
