@@ -13,7 +13,7 @@ st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 
 st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
 
 
-colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade']
+colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
 
 df_columns = df_salary_IT.columns
@@ -282,10 +282,15 @@ def grafico_escolaridade_genero():
     fig.update_layout(margin=dict(t=0, l=0, r=0, b=0))
     col2.plotly_chart(fig)
 
-def grafico_idade():
+def grafico_faixaIdade():
     df_salary_gen_age = df_salary_IT.groupby('Faixa idade')['Genero'].count()
     grafico, eixo = plt.subplots()
     eixo = df_salary_gen_age.plot(kind='bar')
+    col2.pyplot(grafico)
+
+def grafico_idade():
+    grafico, eixo = plt.subplots()
+    eixo = df_salary_IT.boxplot('Idade')
     col2.pyplot(grafico)
 
 with col2:
@@ -309,4 +314,6 @@ with col2:
     elif(eixo_X == 'uf onde mora'):
         grafico_mapa_uf()
     elif (eixo_X == 'Faixa idade'):
+        grafico_faixaIdade()
+    elif (eixo_X == 'Idade'):
         grafico_idade()
