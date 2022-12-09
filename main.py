@@ -161,7 +161,6 @@ def grafico_mapa_uf():
     df_estado.dropna(axis=0, how="any", inplace=True)
     #df_estado.drop(df_estado[df_estado['uf onde mora'] == 'Exterior'].index, inplace=True)
 
-    st.dataframe(df_estado)
     show_column_map(df_estado)
 
 
