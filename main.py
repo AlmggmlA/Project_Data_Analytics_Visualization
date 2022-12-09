@@ -10,15 +10,9 @@ from plotly.subplots import make_subplots
 st.title("Projeto Final - Análise Gráfica")
 
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv',index_col = 0)
-#df_salary_IT['Idade'] = df_salary_IT['Idade'].astype(int)
-#st.dataframe(df_salary_IT.isnull().sum().reset_index())
-
 
 df_columns = df_salary_IT.columns
 col1,col2 = st.columns(2)
-
-# fig = px.bar(df_salary_IT[[f"{eixo_X}",f"{eixo_Y}"]])
-# st.plotly_chart(fig)
 
 with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
@@ -63,7 +57,7 @@ def grafico_genero_mudouEstado():
 # BAR - plotly
 def grafico_genero_salario():
     df_filtro = df_salary_IT.groupby(['Genero', 'Faixa salarial'], as_index=False).size()
-    #st.dataframe(df_filtro)
+
     df_genero_salario_ctb = pd.crosstab(index = df_filtro['Genero'],
                                         columns = df_filtro['Faixa salarial'],
                                         values = df_filtro['size'],
@@ -84,18 +78,6 @@ def grafico_genero_salario():
              'Acima de R$ 40.001/mês': 'black'
              }
 
-    # Funciona com linhas
-    # grafico = px.line(data_frame=df_genero_salario_ctb,
-    #                   x = df_genero_salario_ctb.index,
-    #                   y = df_genero_salario_ctb.columns)
-    #col2.write(grafico)
-
-    # grafico_02, eixo = plt.subplots()
-    # eixo.bar( height = df_genero_salario_ctb.columns,  x = df_genero_salario_ctb.index,
-    #         orientation = "vertical",
-    #         data = df_genero_salario_ctb)
-    #col2.pyplot(grafico_02)
-
     grafico_03 = px.bar(data_frame=df_genero_salario_ctb,
                      x=df_genero_salario_ctb.index,
                      y=df_genero_salario_ctb.columns,
@@ -112,14 +94,3 @@ with col2:
             grafico_genero_salario()
         else:
             grafico_genero_porcentagem()
-
-
-
-# fig = go.Figure(go.Bar(x=df_salary_IT[eixo_X],y=df_salary_IT[eixo_Y].value_counts()), data_frame = df_salary_IT)
-# fig = go.Figure(data=[go.Bar(x=df_salary_IT[eixo_X], y=df_salary_IT[eixo_Y].value_counts())])
-# fig = px.bar(x = df_salary_IT[eixo_X],y = df_salary_IT[eixo_Y], data_frame=df_salary_IT.groupby([eixo_X,eixo_Y]).size())
-
-# fig = px.bar(x=eixo_X, y=eixo_Y, data_frame=df_salary_IT)
-# fig.update_layout(title="Dados Profissionais de TI")
-#col2.plotly_chart(fig)
-
