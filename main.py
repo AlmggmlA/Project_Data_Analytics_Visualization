@@ -9,10 +9,11 @@ from plotly.subplots import make_subplots
 import pydeck as pdk
 
 st.markdown('<h1 style="text-align: center;">Projeto Final - Análise Gráfica</h1>', unsafe_allow_html=True)
-st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 2021 -</h3>', unsafe_allow_html=True)
+st.markdown('<h3 style="text-align: center;">- Profissionais de TI no Brasil em 2021* -</h3>', unsafe_allow_html=True)
 st.markdown('<br/><br/><br/>', unsafe_allow_html=True)
 
 st.markdown('<h8 style="text-align: center;">**Autores:**  <font color=blue>Aprígio Gusmão e Fausto Lucena</font> </h8>', unsafe_allow_html=True)
+st.markdown('<h7 style="text-align: center;">*Fonte:*  <font color=blue>https://www.kaggle.com/datasets/datahackers/state-of-data-2021</font> </h7>', unsafe_allow_html=True)
 
 colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao onde mora','Nivel de Ensino','Faixa idade','Idade']
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
@@ -23,8 +24,7 @@ col1,col2 = st.columns(2)
 with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
     eixo_Y = st.selectbox("eixo Y:", df_columns)
-
-
+    st.text('*de acordo com o questionário preenchido \nno período de 18 de outubro de 2021 a \n6 de dezembro de 2021.')
 
 # PIE - matplotlib
 def grafico_genero_porcentagem():
@@ -110,7 +110,7 @@ def show_column_map(data):
                 'HeatmapLayer',
                 data=data,
                 get_position='[lon, lat]',
-                get_elevation='QTD',
+                get_elevation='elevacao',
                 radius=20000,
                 auto_highlight=True,
                 elevation_scale=100,
@@ -123,7 +123,7 @@ def show_column_map(data):
                 'ColumnLayer',
                 data=data,
                 get_position='[lon, lat]',
-                get_elevation='QTD',
+                get_elevation='elevacao',
                 radius=20000,
                 auto_highlight=True,
                 elevation_scale=100,
@@ -176,18 +176,45 @@ def grafico_mapa_uf():
     df_estado.dropna(axis=0, how="any", inplace=True)
     df_estado_filtro = df_estado.groupby(['uf onde mora'], as_index=False).size()
     df_estado_filtro.rename(columns={"size":"QTD","uf onde mora":"UF"},inplace=True)
-    col1.dataframe(df_estado_filtro)
+    df_estado_filtro['valor percentual'] = df_estado_filtro['QTD'].apply(lambda x: f"{(x/df_estado_filtro['QTD'].sum())*100:.2f}%")
+    df_estado_filtro['elevacao'] = df_estado_filtro['valor percentual'].apply(lambda x:float(x.replace('%',''))*50)
+    col1.dataframe(df_estado_filtro[['UF','QTD','valor percentual']])
     show_column_map(df_estado_filtro)
 
 def grafico_salario_genero():
+    dict_faixa_salarial = {
+        0: "Menos de R$ 1.000/mês",
+        1: "de R$ 1.001/mês a R$ 2.000/mês",
+        2: "de R$ 2.001/mês a R$ 3000/mês",
+        3: "de R$ 3.001/mês a R$ 4.000/mês",
+        4: "de R$ 4.001/mês a R$ 6.000/mês",
+        5: "de R$ 6.001/mês a R$ 8.000/mês",
+        6: "de R$ 8.001/mês a R$ 12.000/mês",
+        7: "de R$ 12.001/mês a R$ 16.000/mês",
+        8: "de R$ 16.001/mês a R$ 20.000/mês",
+        9: "de R$ 20.001/mês a R$ 25.000/mês",
+        10: "de R$ 25.001/mês a R$ 30.000/mês",
+        11: "de R$ 30.001/mês a R$ 40.000/mês",
+        12: "Acima de R$ 40.001/mês",
+    }
     # criando gráfico de pirâmide para salários
-    abs_genero = pd.crosstab(df_salary_IT["Faixa salarial"], df_salary_IT["Genero"])
+    df_faixaSalarial_genero = pd.DataFrame(df_salary_IT, columns= ['Faixa salarial','Genero'])
+    df_faixaSalarial_genero.dropna(axis=0, how='any', inplace=True)
+    df_faixaSalarial_genero["posicao"] = [chave
+                                    for x in df_faixaSalarial_genero['Faixa salarial']
+                                    for chave, valor in dict_faixa_salarial.items()
+                                    if valor == x]
+    df_faixaSalarial_genero.sort_values(by='posicao', inplace=True)
+
+    df_indice = [x for x in dict_faixa_salarial.values()]
+    abs_genero = pd.crosstab(df_faixaSalarial_genero["Faixa salarial"],
+                             df_faixaSalarial_genero["Genero"]).reindex(df_indice)
 
     women_pop = list(abs_genero.Feminino)
     men_pop = list(abs_genero.Masculino)
     men_pop = [element * -1 for element in men_pop]
-
     faixa = list(abs_genero.index.values)
+
 
     fig = go.Figure()
     fig.add_trace(go.Bar(
