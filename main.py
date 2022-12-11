@@ -160,25 +160,20 @@ def grafico_genero_salario():
         x=faixa,
         name='Masculino',
         marker_color='lightgray',
-    )#,1,1
-    )
+    ))
     fig.add_trace(go.Bar(
         y=women_pop,
         x=faixa,
         name='Feminino',
         marker_color='#710c04',
-    )#,1,2
-    )
+    ))
 
-
-    fig.update_layout(barmode='group', xaxis_tickangle=-90)
+    fig.update_layout(barmode='group', xaxis_tickangle=-45)
     fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
     fig.update_layout(width=800, height=500)
-    #fig.update_layout(margin_l=200)
+    fig.update_layout(margin_b=180)
 
     col2.plotly_chart(fig)
-
-
 
 
     #st.dataframe(df_faixaSalarial_genero['Faixa salarial'])
