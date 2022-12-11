@@ -45,21 +45,79 @@ def grafico_genero_porcentagem():
 def grafico_genero_mudouEstado():
     st.markdown('<h4 style="text-align: center;">Mudaram de Estado</h4>',
                 unsafe_allow_html=True)
-    df_filtro = df_salary_IT.groupby(['Genero', "Mudou de Estado?"], as_index=False).size()
 
-    df_gen_mudou_estado_ctb = pd.crosstab(index = df_filtro['Genero'],
-                                          columns = df_filtro['Mudou de Estado?'],
-                                          values = df_filtro['size'],
-                                          aggfunc = "sum")
-    df_gen_mudou_estado_ctb.rename(columns = {0:"Não", 1:"Sim"},inplace=True)
+    #df_filtro = df_salary_IT.groupby(['Genero', "Mudou de Estado?"], as_index=False).size()
+    # valor = []
+    # df_size_gen = df_filtro['size']
+    # for indice in range(len(df_filtro['Genero'])):
+    #     if df_filtro['Genero'][indice] == 'Feminino':
+    #         valor.append(df_size_gen[indice] / df_size_gen[0:2].sum())
+    #     else:
+    #         valor.append(df_size_gen[indice] / df_size_gen[2:4].sum())
+    # porcentagem = pd.DataFrame(valor)
+    # df_gen_mudou_estado = df_filtro
+
+    # df_gen_mudou_estado['porcentagem'] = porcentagem[0].apply(lambda x : f"{x:.2f}%")
+    # df_gen_mudou_estado['porcentagem'] = porcentagem[0].apply(lambda x: x)
+
+    # df_gen_mudou_estado_ctb = pd.crosstab(index = df_gen_mudou_estado['Genero'],
+    #                                       columns = df_gen_mudou_estado['Mudou de Estado?'],
+    #                                       values = df_gen_mudou_estado['size'],
+    #                                       aggfunc = 'sum')
+    # df_gen_mudou_estado_ctb.rename({0:"Não", 1:"Sim"}, axis = 1, inplace=True)
+
+
+    df_filtro = df_salary_IT.groupby(['Genero', 'Mudou de Estado?']).size().reset_index()
+    df_filtro['porcentagem'] = df_salary_IT.groupby(['Genero','Mudou de Estado?']
+    ).size().groupby(level=0).apply(lambda x: 100 * x / float(x.sum())).values
+    df_filtro['porcentagem'] = df_filtro['porcentagem'].map('{:,.2f}%'.format)
+
+    df_gen_mudou_estado_ctb = df_filtro
     # gera gráfico, separado por colunas
-    grafico = px.bar(data_frame = df_gen_mudou_estado_ctb,
-                     x = df_gen_mudou_estado_ctb.index,
-                     y = df_gen_mudou_estado_ctb.columns,
-                     base = df_gen_mudou_estado_ctb.index,
+    grafico = px.bar(data_frame=df_gen_mudou_estado_ctb,
+                     x=df_gen_mudou_estado_ctb['Genero'],
+                     y=df_gen_mudou_estado_ctb['porcentagem'],
+                     color='porcentagem',
+                     color_discrete_sequence=[px.colors.qualitative.Safe[10],
+                                              px.colors.qualitative.Safe[9],
+                                              px.colors.qualitative.Safe[10],
+                                              px.colors.qualitative.Safe[9],],
+                     text = df_gen_mudou_estado_ctb['porcentagem'],
+                     base=df_gen_mudou_estado_ctb['Genero'],
                      barmode="group")
+    grafico.update(layout_showlegend=False)
+    grafico.add_annotation(text='Profissionais de TI',
+                           font=dict(
+                               family="Courier New",
+                               size=18,
+                               color="black"
+                           ), showarrow=False)
 
-    col1.dataframe(df_gen_mudou_estado_ctb)
+
+    df_gen_md_estado = pd.crosstab(index= df_filtro['Genero'],
+                                   columns=df_filtro['Mudou de Estado?'],
+                                   values=df_filtro['porcentagem'],
+                                   aggfunc = 'sum')
+
+    df_gen_md_estado.rename(columns={0: "Não", 1: "Sim"}, inplace=True)
+
+
+    #df_gen_mudou_estado_ctb.rename(columns={0: "Não", 1: "Sim"}, inplace=True)
+
+    # df_gen_mudou_estado_ctb = pd.crosstab(index = df_filtro['Genero'],
+    #                                       columns = df_filtro['Mudou de Estado?'],
+    #                                       values = df_filtro['size'],
+    #                                       aggfunc = "sum")
+    #df_gen_mudou_estado_ctb.rename(columns = {0:"Não", 1:"Sim"},inplace=True)
+
+    # gera gráfico, separado por colunas
+    # grafico = px.bar(data_frame = df_gen_mudou_estado_ctb,
+    #                  x = df_gen_mudou_estado_ctb.index,
+    #                  y = df_gen_mudou_estado_ctb.columns,
+    #                  base = df_gen_mudou_estado_ctb.index,
+    #                  barmode="group")
+
+    col1.dataframe(df_gen_md_estado)
     col2.plotly_chart(grafico)
 
 # BAR - plotly
@@ -196,6 +254,7 @@ def grafico_salario_genero():
                  'de R$ 25.001/mês a R$ 30.000/mês',
                  'de R$ 30.001/mês a R$ 40.000/mês',
                  'Acima de R$ 40.001/mês']
+
     # criando gráfico de pirâmide para salários
     df_faixaSalarial_genero = pd.DataFrame(df_salary_IT, columns= ['Faixa salarial','Genero'])
     df_faixaSalarial_genero.dropna(axis=0, how='any', inplace=True)
