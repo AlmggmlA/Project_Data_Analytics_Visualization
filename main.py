@@ -182,31 +182,29 @@ def grafico_mapa_uf():
     show_column_map(df_estado_filtro)
 
 def grafico_salario_genero():
-    dict_faixa_salarial = {
-        0: "Menos de R$ 1.000/mês",
-        1: "de R$ 1.001/mês a R$ 2.000/mês",
-        2: "de R$ 2.001/mês a R$ 3000/mês",
-        3: "de R$ 3.001/mês a R$ 4.000/mês",
-        4: "de R$ 4.001/mês a R$ 6.000/mês",
-        5: "de R$ 6.001/mês a R$ 8.000/mês",
-        6: "de R$ 8.001/mês a R$ 12.000/mês",
-        7: "de R$ 12.001/mês a R$ 16.000/mês",
-        8: "de R$ 16.001/mês a R$ 20.000/mês",
-        9: "de R$ 20.001/mês a R$ 25.000/mês",
-        10: "de R$ 25.001/mês a R$ 30.000/mês",
-        11: "de R$ 30.001/mês a R$ 40.000/mês",
-        12: "Acima de R$ 40.001/mês",
-    }
+
+    df_indice = ['Menos de R$ 1.000/mês',
+                 'de R$ 1.001/mês a R$ 2.000/mês',
+                 'de R$ 2.001/mês a R$ 3000/mês',
+                 'de R$ 3.001/mês a R$ 4.000/mês',
+                 'de R$ 4.001/mês a R$ 6.000/mês',
+                 'de R$ 6.001/mês a R$ 8.000/mês',
+                 'de R$ 8.001/mês a R$ 12.000/mês',
+                 'de R$ 12.001/mês a R$ 16.000/mês',
+                 'de R$ 16.001/mês a R$ 20.000/mês',
+                 'de R$ 20.001/mês a R$ 25.000/mês',
+                 'de R$ 25.001/mês a R$ 30.000/mês',
+                 'de R$ 30.001/mês a R$ 40.000/mês',
+                 'Acima de R$ 40.001/mês']
     # criando gráfico de pirâmide para salários
     df_faixaSalarial_genero = pd.DataFrame(df_salary_IT, columns= ['Faixa salarial','Genero'])
     df_faixaSalarial_genero.dropna(axis=0, how='any', inplace=True)
-    df_faixaSalarial_genero["posicao"] = [chave
-                                    for x in df_faixaSalarial_genero['Faixa salarial']
-                                    for chave, valor in dict_faixa_salarial.items()
-                                    if valor == x]
+    df_faixaSalarial_genero["posicao"] = [faixa_salarial
+                                          for faixa_salarial in df_indice
+                                          for faixa in df_faixaSalarial_genero['Faixa salarial']
+                                          if faixa_salarial == faixa]
     df_faixaSalarial_genero.sort_values(by='posicao', inplace=True)
 
-    df_indice = [x for x in dict_faixa_salarial.values()]
     abs_genero = pd.crosstab(df_faixaSalarial_genero["Faixa salarial"],
                              df_faixaSalarial_genero["Genero"]).reindex(df_indice)
 
@@ -214,7 +212,6 @@ def grafico_salario_genero():
     men_pop = list(abs_genero.Masculino)
     men_pop = [element * -1 for element in men_pop]
     faixa = list(abs_genero.index.values)
-
 
     fig = go.Figure()
     fig.add_trace(go.Bar(
