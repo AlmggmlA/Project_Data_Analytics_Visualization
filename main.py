@@ -124,20 +124,78 @@ def grafico_genero_mudouEstado():
 def grafico_genero_salario():
     st.markdown('<h4 style="text-align: center;">Divisão por Faixa Salarial e Gênero</h4>',
                 unsafe_allow_html=True)
-    df_filtro = df_salary_IT.groupby(['Genero', 'Faixa salarial'], as_index=False).size()
+    df_indice = ['Menos de R$ 1.000/mês',
+                 'de R$ 1.001/mês a R$ 2.000/mês',
+                 'de R$ 2.001/mês a R$ 3000/mês',
+                 'de R$ 3.001/mês a R$ 4.000/mês',
+                 'de R$ 4.001/mês a R$ 6.000/mês',
+                 'de R$ 6.001/mês a R$ 8.000/mês',
+                 'de R$ 8.001/mês a R$ 12.000/mês',
+                 'de R$ 12.001/mês a R$ 16.000/mês',
+                 'de R$ 16.001/mês a R$ 20.000/mês',
+                 'de R$ 20.001/mês a R$ 25.000/mês',
+                 'de R$ 25.001/mês a R$ 30.000/mês',
+                 'de R$ 30.001/mês a R$ 40.000/mês',
+                 'Acima de R$ 40.001/mês']
 
-    df_genero_salario_ctb = pd.crosstab(index = df_filtro['Genero'],
-                                        columns = df_filtro['Faixa salarial'],
-                                        values = df_filtro['size'],
-                                        aggfunc = 'sum')
+    # criando gráfico de pirâmide para salários
+    df_faixaSalarial_genero = pd.DataFrame(df_salary_IT, columns=['Faixa salarial', 'Genero'])
+    df_faixaSalarial_genero.dropna(axis=0, how='any', inplace=True)
+    df_faixaSalarial_genero["posicao"] = [faixa_salarial
+                                          for faixa_salarial in df_indice
+                                          for faixa in df_faixaSalarial_genero['Faixa salarial']
+                                          if faixa_salarial == faixa]
+    df_faixaSalarial_genero.sort_values(by='posicao', inplace=True)
+    df_genero_salario_ctb = pd.crosstab(df_faixaSalarial_genero["Faixa salarial"],
+                                        df_faixaSalarial_genero["Genero"]).reindex(df_indice)
 
-    grafico = px.bar(data_frame=df_genero_salario_ctb,
-                     x=df_genero_salario_ctb.index,
-                     y=df_genero_salario_ctb.columns,
-                     base=df_genero_salario_ctb.index,
-                     barmode="group")
+    women_pop = list(df_genero_salario_ctb.Feminino)
+    men_pop = list(df_genero_salario_ctb.Masculino)
+    faixa = list(df_genero_salario_ctb.index.values)
+
+    #fig = make_subplots(rows=1, cols=2)
+    fig = go.Figure()
+    fig.add_trace(go.Bar(
+        y=men_pop,
+        x=faixa,
+        name='Masculino',
+        marker_color='lightgray',
+    )#,1,1
+    )
+    fig.add_trace(go.Bar(
+        y=women_pop,
+        x=faixa,
+        name='Feminino',
+        marker_color='#710c04',
+    )#,1,2
+    )
+
+
+    fig.update_layout(barmode='group', xaxis_tickangle=-90)
+    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
+    fig.update_layout(width=800, height=500)
+    #fig.update_layout(margin_l=200)
+
+    col2.plotly_chart(fig)
+
+
+
+
+    #st.dataframe(df_faixaSalarial_genero['Faixa salarial'])
+    #df_filtro = df_salary_IT.groupby(['Genero', 'Faixa salarial'], as_index=False).size()
+    # df_genero_salario_ctb = pd.crosstab(index = df_filtro['Genero'],
+    #                                     columns = df_filtro['Faixa salarial'],
+    #                                     values = df_filtro['size'],
+    #                                     aggfunc = 'sum')
+    #
+    # grafico = px.bar(data_frame=df_genero_salario_ctb,
+    #                  x=df_genero_salario_ctb.index,
+    #                  y=df_genero_salario_ctb.columns,
+    #                  base=df_genero_salario_ctb.index,
+    #                  barmode="group")
+
     col1.dataframe(df_genero_salario_ctb)
-    col2.plotly_chart(grafico)
+    #col2.plotly_chart(grafico)
 
 def grafico_uf_genero():
     st.markdown('<h5 style="text-align: center;">Divisão por Estado e Gênero</h5>',
