@@ -19,11 +19,15 @@ colunas = ['Genero','Mudou de Estado?','Faixa salarial','uf onde mora','Regiao o
 df_salary_IT = pd.read_csv('./data/data_science_salary_21_cols.csv', usecols=colunas)
 
 df_columns = df_salary_IT.columns
+lst_tipo_analise = ['Mudou de Estado x Gênero','Salário por gênero','Porcentagem por gênero',
+                    'Gênero por Estado','Gênero por Região', "Gênero por Escolaridade",
+                    'Mapeamento por Estado','Faixa Etária','Responderam questionário por Estado']
 col1,col2 = st.columns(2)
 
 with col1:
     eixo_X = st.selectbox("eixo X:", df_columns)
     eixo_Y = st.selectbox("eixo Y:", df_columns)
+    tipo_analise = st.selectbox("Tipo de análise:",lst_tipo_analise)
     st.text('*de acordo com o questionário preenchido \nno período de 18 de outubro de 2021 a \n6 de dezembro de 2021.')
 
 # PIE - matplotlib
@@ -167,6 +171,7 @@ def grafico_genero_salario():
         name='Feminino',
         marker_color='#710c04',
     ))
+
 
     fig.update_layout(barmode='group', xaxis_tickangle=-45)
     fig.update_layout(plot_bgcolor='rgba(0,0,0,0)')
@@ -459,27 +464,47 @@ def grafico_questionario_uf():
 
 with col2:
 
-    if(eixo_X == 'Genero'):
-        if (eixo_Y == 'Mudou de Estado?'):
-            grafico_genero_mudouEstado()
-        elif (eixo_Y == 'Faixa salarial'):
-            grafico_genero_salario()
-        elif (eixo_Y == 'Genero'):
-            grafico_genero_porcentagem()
-    elif (eixo_Y == 'Genero'):
-        if (eixo_X == 'uf onde mora'):
-            grafico_uf_genero()
-        elif (eixo_X == 'Regiao onde mora'):
-            grafico_regiao_genero()
-        elif (eixo_X == 'Faixa salarial'):
-            grafico_salario_genero()
-        elif (eixo_X == 'Nivel de Ensino'):
-            grafico_escolaridade_genero()
-    elif(eixo_X == 'uf onde mora' and eixo_Y == 'uf onde mora'):
+    if tipo_analise == "Mudou de Estado x Gênero":
+        grafico_genero_mudouEstado()
+    elif tipo_analise == "Salário por gênero":
+        grafico_genero_salario()
+    elif tipo_analise == "Porcentagem por gênero":
+        grafico_genero_porcentagem()
+    elif tipo_analise == "Gênero por Estado":
+        grafico_uf_genero()
+    elif tipo_analise == "Gênero por Região":
+        grafico_regiao_genero()
+    elif tipo_analise == "Gênero por Escolaridade":
+        grafico_escolaridade_genero()
+    elif tipo_analise == "Mapeamento por Estado":
         grafico_mapa_uf()
-    elif (eixo_X == 'Faixa idade' and eixo_Y == 'Faixa idade'):
+    elif tipo_analise == "Faixa Etária":
         grafico_faixaIdade()
-    elif (eixo_X == 'Idade' and eixo_Y == 'Idade'):
-        grafico_idade()
-    elif (eixo_X == 'Regiao onde mora' and eixo_Y == 'Regiao onde mora'):
+    elif tipo_analise == "Responderam questionário por Estado":
         grafico_questionario_uf()
+
+
+    # if(eixo_X == 'Genero'):
+    #     if (eixo_Y == 'Mudou de Estado?'):
+    #         grafico_genero_mudouEstado()
+    #     elif (eixo_Y == 'Faixa salarial'):
+    #         grafico_genero_salario()
+    #     elif (eixo_Y == 'Genero'):
+    #         grafico_genero_porcentagem()
+    # elif (eixo_Y == 'Genero'):
+    #     if (eixo_X == 'uf onde mora'):
+    #         grafico_uf_genero()
+    #     elif (eixo_X == 'Regiao onde mora'):
+    #         grafico_regiao_genero()
+    #     elif (eixo_X == 'Faixa salarial'):
+    #         grafico_salario_genero()
+    #     elif (eixo_X == 'Nivel de Ensino'):
+    #         grafico_escolaridade_genero()
+    # elif(eixo_X == 'uf onde mora' and eixo_Y == 'uf onde mora'):
+    #     grafico_mapa_uf()
+    # elif (eixo_X == 'Faixa idade' and eixo_Y == 'Faixa idade'):
+    #     grafico_faixaIdade()
+    # elif (eixo_X == 'Idade' and eixo_Y == 'Idade'):
+    #     grafico_idade()
+    # elif (eixo_X == 'Regiao onde mora' and eixo_Y == 'Regiao onde mora'):
+    #     grafico_questionario_uf()
