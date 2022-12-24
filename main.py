@@ -25,8 +25,8 @@ lst_tipo_analise = ['Mudou de Estado x Gênero','Salário por gênero','Porcenta
 col1,col2 = st.columns(2)
 
 with col1:
-    eixo_X = st.selectbox("eixo X:", df_columns)
-    eixo_Y = st.selectbox("eixo Y:", df_columns)
+    # eixo_X = st.selectbox("eixo X:", df_columns)
+    # eixo_Y = st.selectbox("eixo Y:", df_columns)
     tipo_analise = st.selectbox("Tipo de análise:",lst_tipo_analise)
     st.text('*de acordo com o questionário preenchido \nno período de 18 de outubro de 2021 a \n6 de dezembro de 2021.')
 
