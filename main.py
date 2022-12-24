@@ -455,15 +455,19 @@ def grafico_questionario_uf():
     qtd = df_salary_IT['Regiao onde mora'].value_counts().values
     idx = df_salary_IT['Regiao onde mora'].value_counts().index
 
+    # paleta de cores
+    lst_cores = ["#BF45F5","#9A77A8","#AB6748", "#FA601B", "#42F55D", "#66dee2"]
+
     plt.figure(figsize=(24, 8))
     grafico01,eixo01 = plt.subplots() #(1, 2, 1)
-    eixo01 = plt.bar(idx, qtd, ec="k", alpha=.6, color="royalblue")
+    eixo01 = plt.bar(idx, qtd, ec="k", alpha=.6, color= lst_cores)
     plt.xlabel('Estado')
     plt.title("Quantidade de profissionais que preencheram o questionario por UF")
     grafico02,eixo02 = plt.subplots() #(1, 2, 2)
     eixo02 = plt.pie(qtd,
             labels=list(idx),
-            colors=["#20257c", "#424ad1", "#6a8ee8", "#66bbe2", "#66dee2"],
+            #colors=["#20257c", "#424ad1", "#6a8ee8", "#66bbe2", "#66dee2"],
+            colors = lst_cores,
             labeldistance=1.1,
             #explode=[0.08, 0.05],
             #explode=[0, 0, .1, .2, .4],
