@@ -184,13 +184,13 @@ def grafico_genero_salario():
     # Calculando porcentangem
     df_porcentagem = pd.DataFrame(df_genero_salario_ctb)
     total_mulheres = df_porcentagem['Feminino'].sum()
-    df_porcentagem['Feminino (%)'] = df_porcentagem['Feminino'].apply(lambda x: 100 * (x / total_mulheres)).values
-    df_porcentagem['Feminino (%)'] = df_porcentagem['Feminino (%)'].map('{:,.2f}%'.format)
+    df_porcentagem['Fem (%)'] = df_porcentagem['Feminino'].apply(lambda x: 100 * (x / total_mulheres)).values
+    df_porcentagem['Fem (%)'] = df_porcentagem['Fem (%)'].map('{:,.2f}%'.format)
 
     total_homens = df_porcentagem['Masculino'].sum()
-    df_porcentagem['Masculino (%)'] = df_porcentagem['Masculino'].apply(lambda x: 100 * (x / total_homens)).values
-    df_porcentagem['Masculino (%)'] = df_porcentagem['Masculino (%)'].map('{:,.2f}%'.format)
-    col1.dataframe(df_porcentagem[['Feminino (%)', 'Masculino (%)']])
+    df_porcentagem['Masc (%)'] = df_porcentagem['Masculino'].apply(lambda x: 100 * (x / total_homens)).values
+    df_porcentagem['Masc (%)'] = df_porcentagem['Masc (%)'].map('{:,.2f}%'.format)
+    col1.dataframe(df_porcentagem[['Fem (%)', 'Masc (%)']])
 
 
     #st.dataframe(df_faixaSalarial_genero['Faixa salarial'])
