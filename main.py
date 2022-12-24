@@ -153,6 +153,7 @@ def grafico_genero_salario():
     df_genero_salario_ctb = pd.crosstab(df_faixaSalarial_genero["Faixa salarial"],
                                         df_faixaSalarial_genero["Genero"]).reindex(df_indice)
 
+  # Estruturando o gráfico
     women_pop = list(df_genero_salario_ctb.Feminino)
     men_pop = list(df_genero_salario_ctb.Masculino)
     faixa = list(df_genero_salario_ctb.index.values)
@@ -180,6 +181,17 @@ def grafico_genero_salario():
 
     col2.plotly_chart(fig)
 
+    # Calculando porcentangem
+    df_porcentagem = pd.DataFrame(df_genero_salario_ctb)
+    total_mulheres = df_porcentagem['Feminino'].sum()
+    df_porcentagem['Feminino (%)'] = df_porcentagem['Feminino'].apply(lambda x: 100 * (x / total_mulheres)).values
+    df_porcentagem['Feminino (%)'] = df_porcentagem['Feminino (%)'].map('{:,.2f}%'.format)
+
+    total_homens = df_porcentagem['Masculino'].sum()
+    df_porcentagem['Masculino (%)'] = df_porcentagem['Masculino'].apply(lambda x: 100 * (x / total_homens)).values
+    df_porcentagem['Masculino (%)'] = df_porcentagem['Masculino (%)'].map('{:,.2f}%'.format)
+    col1.dataframe(df_porcentagem[['Feminino (%)', 'Masculino (%)']])
+
 
     #st.dataframe(df_faixaSalarial_genero['Faixa salarial'])
     #df_filtro = df_salary_IT.groupby(['Genero', 'Faixa salarial'], as_index=False).size()
@@ -194,7 +206,8 @@ def grafico_genero_salario():
     #                  base=df_genero_salario_ctb.index,
     #                  barmode="group")
 
-    col1.dataframe(df_genero_salario_ctb)
+    #col1.dataframe(df_genero_salario_ctb)
+
     #col2.plotly_chart(grafico)
 
 def grafico_uf_genero():
