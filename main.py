@@ -82,10 +82,7 @@ def grafico_genero_mudouEstado():
                      x=df_gen_mudou_estado_ctb['Genero'],
                      y=df_gen_mudou_estado_ctb['porcentagem'],
                      color='porcentagem',
-                     color_discrete_sequence=[px.colors.qualitative.Safe[10],
-                                              px.colors.qualitative.Safe[9],
-                                              px.colors.qualitative.Safe[10],
-                                              px.colors.qualitative.Safe[9],],
+                     color_discrete_sequence= ["#D3D3D3","#710c04"],
                      text = df_gen_mudou_estado_ctb['porcentagem'],
                      base=df_gen_mudou_estado_ctb['Genero'],
                      barmode="group")
@@ -227,7 +224,6 @@ def grafico_uf_genero():
                           palette=lst_cores,
                           data=df_salary_IT)
     grafico.set_xticklabels(rotation= -45)
-    #sns.set(rc = {'figure.figsize':(25,19)})
     #grafico.figure(figsize=(25,19))
     col2.pyplot(grafico)
 
