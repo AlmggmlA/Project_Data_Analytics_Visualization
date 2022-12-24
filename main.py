@@ -215,13 +215,36 @@ def grafico_genero_salario():
 def grafico_uf_genero():
     st.markdown('<h5 style="text-align: center;">Divisão por Estado e Gênero</h5>',
                 unsafe_allow_html=True)
-    grafico = sns.displot(x='uf onde mora', col="Genero", data=df_salary_IT)
+
+    # paleta de cores
+    lst_cores = ["#BF45F5","#9A77A8","#AB6748", "#FA601B", "#42F55D", "#66dee2","#A67386",
+                 "#733049","#D3C5D6","#D2D943","#A6A279","#090AB3","#313145","#000000",
+                 "#07330A","#4E9163","#FF9CFF","#C3D91C","#FF4336","#FFF49C","#00A8FF"]
+
+    grafico = sns.displot(x='uf onde mora',
+                          col="Genero",
+                          hue="uf onde mora",
+                          palette=lst_cores,
+                          data=df_salary_IT)
+    grafico.set_xticklabels(rotation= -45)
+    #sns.set(rc = {'figure.figsize':(25,19)})
+    #grafico.figure(figsize=(25,19))
     col2.pyplot(grafico)
 
 def grafico_regiao_genero():
     st.markdown('<h5 style="text-align: center;">Divisão por Região e Gênero</h5>',
                 unsafe_allow_html=True)
-    grafico = sns.displot(x='Regiao onde mora', col="Genero", data=df_salary_IT)
+
+    # paleta de cores
+    lst_cores = ["#BF45F5", "#9A77A8", "#AB6748", "#FA601B", "#42F55D", "#66dee2"]
+
+    # Gráfico
+    grafico = sns.displot(x='Regiao onde mora',
+                          col = "Genero",
+                          hue="Regiao onde mora",
+                          palette=lst_cores,
+                          data=df_salary_IT)
+    grafico.set_xticklabels(rotation= -45)
     col2.pyplot(grafico)
 
 def show_column_map(data):
