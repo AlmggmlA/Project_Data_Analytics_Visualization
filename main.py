@@ -191,6 +191,8 @@ def grafico_genero_salario():
     df_porcentagem['Masc (%)'] = df_porcentagem['Masculino'].apply(lambda x: 100 * (x / total_homens)).values
     df_porcentagem['Masc (%)'] = df_porcentagem['Masc (%)'].map('{:,.2f}%'.format)
     col1.dataframe(df_porcentagem[['Fem (%)', 'Masc (%)']])
+    st.write(f'Total de mulheres: {total_mulheres}')
+    st.write(f'Total de homens: {total_homens}')
 
 
     #st.dataframe(df_faixaSalarial_genero['Faixa salarial'])
