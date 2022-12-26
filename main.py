@@ -470,6 +470,9 @@ def grafico_idade():
     col2.pyplot(grafico)
 
 def grafico_questionario_uf():
+    st.markdown('<h6 style="text-align: center;">Quantidade de profissionais que preencheram o questionario por UF</h6>',
+                unsafe_allow_html=True)
+
     #df101 = df_salary_IT.groupby(['Nivel'])['Genero', 'uf onde mora', 'Faixa salarial'].value_counts()
     qtd = df_salary_IT['Regiao onde mora'].value_counts().values
     idx = df_salary_IT['Regiao onde mora'].value_counts().index
@@ -477,24 +480,45 @@ def grafico_questionario_uf():
     # paleta de cores
     lst_cores = ["#BF45F5","#9A77A8","#AB6748", "#FA601B", "#42F55D", "#66dee2"]
 
+
+                            ##################################################################
+    ######################### VERIFICAR O CÁLCULO PARA SE EXIBIR A PORCENTAGEM NO GRÁFICO!!! ###########################
+                            ##################################################################
+    # df_porcentagem = pd.DataFrame(df_salary_IT)
+    # total_estado = df_porcentagem["Regiao onde mora"].count()
+    # df_porcentagem["porcentagem"] = df_porcentagem["Regiao onde mora"].apply(
+    #     lambda x: 100*(df_porcentagem[df_porcentagem["Regiao onde mora"] == f'{x}']["Regiao onde mora"].count()/total_estado)
+    #     for x in df_porcentagem["Regiao onde mora"].unique()
+    # ).values
+
+    #df_porcentagem['porcentagem'] = df_porcentagem['porcentagem'].map('{:,.2f}%'.format)
+    #df_porcentagem['porcentagem']
+
+    #st.write(total_estado)
+    #st.write(f'{df_porcentagem["Regiao onde mora"].count()}')
+    #st.write(f'{df_porcentagem[df_porcentagem["Regiao onde mora"] == "Sudeste"]["Regiao onde mora"].count()}')
+    #st.write(f'{df_porcentagem[df_porcentagem["Regiao onde mora"] == "Norte"]["Regiao onde mora"].count()}')
+    ####################################################################################################################
+
     plt.figure(figsize=(24, 8))
     grafico01,eixo01 = plt.subplots() #(1, 2, 1)
     eixo01 = plt.bar(idx, qtd, ec="k", alpha=.6, color= lst_cores)
     plt.xlabel('Estado')
-    plt.title("Quantidade de profissionais que preencheram o questionario por UF")
+    #plt.title("Quantidade de profissionais que preencheram o questionario por UF")
     grafico02,eixo02 = plt.subplots() #(1, 2, 2)
     eixo02 = plt.pie(qtd,
             labels=list(idx),
-            #colors=["#20257c", "#424ad1", "#6a8ee8", "#66bbe2", "#66dee2"],
             colors = lst_cores,
             labeldistance=1.1,
+            autopct="%.2f%%",
+            pctdistance=0.75,
             #explode=[0.08, 0.05],
             #explode=[0, 0, .1, .2, .4],
             wedgeprops={"ec": "k"},
             textprops={"fontsize": 15},
             )
     plt.axis("equal")
-    plt.title("Quantidade de profissionais que preencheram o questionario por UF")
+    #plt.title("Quantidade de profissionais que preencheram o questionario por UF")
     plt.legend()
     col2.pyplot(grafico01)
     col2.pyplot(grafico02)
